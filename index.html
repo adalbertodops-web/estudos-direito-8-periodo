@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direito — 8º Período</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12162A;
+    --surface:#1B2140;
+    --surface-2:#232B4D;
+    --paper:#EDE7D8;
+    --paper-text:#241F14;
+    --brass:#B98D4A;
+    --brass-dim:#8A6B3B;
+    --sage:#7C8B63;
+    --urgent:#A94438;
+    --text:#E9E6DC;
+    --text-dim:#A9AFC7;
+    --border:#2C3357;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,h3,.serif{font-family:'Source Serif 4', serif;}
+  .app{max-width:760px;margin:0 auto;padding:0 0 64px;}
+
+  header.top{
+    position:sticky; top:0; z-index:10;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    padding:18px 20px 0;
+  }
+  header.top .title{
+    font-size:1.15rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    margin:0 0 14px;
+    color:var(--text);
+  }
+  header.top .title em{
+    font-style:italic;
+    color:var(--brass);
+  }
+  nav.tabs{
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:2px;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs button{
+    flex:0 0 auto;
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.88rem;
+    padding:10px 14px 12px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+  }
+  nav.tabs button .num{
+    color:var(--brass-dim);
+    font-family:'Source Serif 4', serif;
+    font-style:italic;
+    margin-right:6px;
+  }
+  nav.tabs button.active{
+    color:var(--text);
+    border-bottom:2px solid var(--brass);
+  }
+  nav.tabs button.active .num{color:var(--brass);}
+
+  main{padding:24px 20px 0;}
+
+  /* ---------- Início ---------- */
+  .countdown-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:22px 22px;
+    margin-bottom:28px;
+  }
+  .countdown-card .eyebrow{
+    color:var(--text-dim);
+    font-size:0.8rem;
+    margin-bottom:8px;
+  }
+  .countdown-card .big{
+    font-family:'Source Serif 4', serif;
+    font-size:2.1rem;
+    font-weight:600;
+    color:var(--brass);
+    line-height:1.2;
+  }
+  .countdown-card .sub{
+    color:var(--text-dim);
+    font-size:0.92rem;
+    margin-top:4px;
+  }
+
+  table.pauta{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.88rem;
+  }
+  table.pauta caption{
+    text-align:left;
+    font-family:'Source Serif 4', serif;
+    font-size:1.05rem;
+    margin-bottom:12px;
+    color:var(--text);
+  }
+  table.pauta th{
+    text-align:left;
+    color:var(--text-dim);
+    font-weight:500;
+    font-size:0.76rem;
+    padding:0 10px 8px 0;
+    border-bottom:1px solid var(--border);
+  }
+  table.pauta td{
+    padding:10px 10px 10px 0;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+    vertical-align:top;
+  }
+  table.pauta td.materia{font-family:'Source Serif 4', serif;}
+  table.pauta tr.soon td{color:var(--brass);}
+  table.pauta td.dim{color:var(--text-dim);}
+
+  /* ---------- Matéria ---------- */
+  .materia-head{margin-bottom:18px;}
+  .materia-head h2{margin:0 0 4px; font-size:1.5rem;}
+  .materia-head .datas{
+    display:flex; flex-wrap:wrap; gap:6px 14px;
+    font-size:0.78rem; color:var(--text-dim); margin-top:8px;
+  }
+  .materia-head .datas span b{color:var(--text);}
+
+  .progress-bar{
+    height:5px; background:var(--surface-2); border-radius:3px; overflow:hidden; margin-top:14px;
+  }
+  .progress-bar .fill{height:100%; background:var(--sage);}
+  .progress-label{font-size:0.76rem; color:var(--text-dim); margin-top:6px;}
+
+  .empty{
+    color:var(--text-dim);
+    font-size:0.92rem;
+    padding:28px 0;
+    line-height:1.6;
+  }
+
+  .tema{
+    border:1px solid var(--border);
+    border-radius:4px;
+    margin-bottom:12px;
+    background:var(--surface);
+    overflow:hidden;
+  }
+  .tema-head{
+    display:flex; align-items:center; gap:10px;
+    padding:14px 16px;
+    cursor:pointer;
+  }
+  .tema-head .chev{
+    color:var(--brass);
+    font-size:0.8rem;
+    transition:transform 0.15s ease;
+  }
+  .tema.open .tema-head .chev{transform:rotate(90deg);}
+  .tema-head .titulo{
+    flex:1;
+    font-family:'Source Serif 4', serif;
+    font-size:1.05rem;
+  }
+  .tema-head .revisado-pill{
+    font-size:0.72rem;
+    padding:3px 9px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .tema-head .revisado-pill.on{
+    background:rgba(124,139,99,0.18);
+    border-color:var(--sage);
+    color:var(--sage);
+  }
+
+  .tema-body{
+    display:none;
+    padding:0 16px 20px;
+  }
+  .tema.open .tema-body{display:block;}
+
+  .resumo{
+    background:var(--paper);
+    color:var(--paper-text);
+    border-radius:3px;
+    padding:16px 18px;
+    font-size:0.92rem;
+    line-height:1.65;
+  }
+  .resumo h4{
+    font-family:'Source Serif 4', serif;
+    font-size:0.95rem;
+    margin:0 0 8px;
+    color:var(--paper-text);
+  }
+  .resumo blockquote{
+    margin:12px 0 0;
+    padding-left:12px;
+    border-left:3px solid var(--brass);
+    font-style:italic;
+  }
+  .resumo ul{margin:8px 0 0; padding-left:20px;}
+  .resumo strong{color:#5c3d1a;}
+
+  .section-label{
+    font-size:0.76rem;
+    color:var(--text-dim);
+    margin:18px 0 8px;
+  }
+
+  .flashcards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:480px){
+    .flashcards{grid-template-columns:1fr;}
+  }
+  .flashcard{
+    perspective:1000px;
+    height:120px;
+    cursor:pointer;
+  }
+  .flashcard-inner{
+    position:relative; width:100%; height:100%;
+    transition:transform 0.5s;
+    transform-style:preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+  .flashcard-face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:3px;
+    padding:12px;
+    font-size:0.84rem;
+    line-height:1.4;
+    display:flex; align-items:center;
+    overflow-y:auto;
+  }
+  .flashcard-face.front{
+    background:var(--paper); color:var(--paper-text);
+    border:1px solid var(--brass-dim);
+  }
+  .flashcard-face.back{
+    background:var(--surface-2); color:var(--text);
+    border:1px solid var(--sage);
+    transform:rotateY(180deg);
+  }
+  .flashcard-face .tag{
+    position:absolute; top:6px; right:8px;
+    font-size:0.65rem; color:var(--text-dim);
+  }
+
+  .add-tema-btn{
+    display:block;
+    width:100%;
+    background:none;
+    border:1px dashed var(--border);
+    color:var(--text-dim);
+    padding:12px;
+    border-radius:4px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.85rem;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .add-tema-btn:hover{color:var(--brass); border-color:var(--brass-dim);}
+
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(10,12,24,0.7);
+    z-index:20;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px 10px 0 0;
+    width:100%; max-width:520px;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:20px;
+  }
+  .modal h3{margin:0 0 14px;}
+  .modal label{
+    display:block; font-size:0.78rem; color:var(--text-dim); margin:14px 0 6px;
+  }
+  .modal input, .modal textarea{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    color:var(--text);
+    padding:10px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.88rem;
+    resize:vertical;
+  }
+  .fc-row{display:flex; gap:8px; margin-bottom:8px;}
+  .fc-row input{flex:1;}
+  .fc-row button{
+    background:none; border:1px solid var(--border); color:var(--text-dim);
+    border-radius:4px; padding:0 10px; cursor:pointer;
+  }
+  .modal-actions{
+    display:flex; gap:10px; margin-top:18px;
+  }
+  .modal-actions button{
+    flex:1;
+    padding:12px;
+    border-radius:4px;
+    border:none;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.88rem;
+    cursor:pointer;
+  }
+  .btn-cancel{background:var(--surface-2); color:var(--text-dim);}
+  .btn-save{background:var(--brass); color:#1B1204; font-weight:600;}
+  .btn-add-fc{background:none; border:1px dashed var(--border); color:var(--text-dim); width:100%; padding:8px; border-radius:4px; cursor:pointer; font-size:0.8rem;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="title">Direito — <em>8º Período</em></div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+  <main id="main"></main>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 class="serif">Novo tema</h3>
+    <label>Título do tema</label>
+    <input type="text" id="novoTitulo" placeholder="Ex: Tutela de urgência">
+    <label>Resumo (didático, para revisão rápida)</label>
+    <textarea id="novoResumo" rows="5" placeholder="Explique o tema de forma direta, com os pontos que mais caem em prova..."></textarea>
+    <label>Flashcards</label>
+    <div id="fcList"></div>
+    <button class="btn-add-fc" onclick="addFlashcardRow()">+ Adicionar flashcard</button>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="salvarTema()">Salvar tema</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- Seed data ----------
+const SUBJECTS = [
+  { id:'processo-trabalho', numeral:'I', nome:'Processo do Trabalho',
+    dates:{ 'AV1':'16/09/26', 'AV2':'19/10/26', 'AV Final':'25/11/26', '2ª chamada':'11/11/26', 'Especial':'09/12/26' },
+    temas: [
+      { id:'pt-tgp', titulo:'TGP: Jurisdição, Ação e Processo',
+        resumo:`<h4>Jurisdição</h4>
+          <p>É a aplicação da lei a situações concretas, de forma racional e argumentativa. Características: <strong>terceiro imparcial</strong> (não neutro), <strong>órgão de decisão</strong> (não consultivo) e <strong>decisão insuscetível de controle externo</strong> ao Judiciário.</p>
+          <p><strong>Escopos:</strong> social (pacificação/lide sociológica), político (garantia de liberdades), educacional (efeito pedagógico) e jurídico (aplicação da norma ao caso concreto).</p>
+          <p><strong>Jurisdição trabalhista</strong>: função estatal exercida para solucionar conflitos trabalhistas de forma definitiva. Marcas: desigualdade entre as partes e protagonismo judicial.</p>
+          <h4>Ação</h4>
+          <p>Direito de provocar a atividade jurisdicional. Condições da ação (art. 17 e 485, VI do CPC): <strong>interesse</strong> (utilidade/necessidade) e <strong>legitimidade</strong> (pertinência subjetiva).</p>
+          <p><strong>Ação trabalhista</strong>: marcada pelo <em>jus postulandi</em> da parte. Exceções ao jus postulandi: Súmula 425/TST e homologação de acordo extrajudicial (art. 855-B a E CLT).</p>
+          <blockquote><strong>Súmula 425/TST</strong>: o jus postulandi das partes (art. 791/CLT) limita-se às Varas do Trabalho e aos TRTs, não alcançando a ação rescisória, a ação cautelar, o mandado de segurança e os recursos de competência do TST — nessas hipóteses é indispensável advogado.</blockquote>
+          <h4>Processo</h4>
+          <blockquote>Processo é o instrumento previsto em lei para exercer a jurisdição; procedimento é a exteriorização do processo pelos atos praticados.</blockquote>
+          <p><strong>Processo trabalhista</strong>: simplificado e informal, usando o CPC de forma supletiva e subsidiária (art. 769/CLT; art. 15/CPC).</p>`,
+        flashcards:[
+          {p:'Quais as 3 características da jurisdição?', r:'Terceiro imparcial (não neutro); órgão de decisão (não consultivo); decisão insuscetível de controle externo ao Judiciário.'},
+          {p:'Quais os 4 escopos da jurisdição?', r:'Social, político, educacional e jurídico.'},
+          {p:'Quais as condições da ação e onde estão previstas?', r:'Interesse e legitimidade — art. 17 e 485, VI do CPC.'},
+          {p:'O que é jus postulandi e quais suas exceções?', r:'Capacidade de a própria parte postular sem advogado na Justiça do Trabalho. Exceções: Súmula 425/TST e homologação de acordo extrajudicial (art. 855-B a E da CLT).'},
+          {p:'Diferença entre processo e procedimento?', r:'Processo é o instrumento previsto em lei para o exercício da jurisdição; procedimento é a exteriorização do processo pelos atos processuais praticados.'}
+        ]},
+      { id:'pt-conceito-fontes', titulo:'Conceito, Autonomia e Fontes do DPT',
+        resumo:`<h4>Conceito</h4>
+          <p>Disciplina que estuda a jurisdição trabalhista, usando supletiva e subsidiariamente o processo civil, à luz dos princípios constitucionais, para concretizar as normas de Direito do Trabalho.</p>
+          <h4>Autonomia frente ao Direito Processual Civil</h4>
+          <ul>
+            <li><strong>Monista</strong>: mero desdobramento do DPC, sem institutos próprios.</li>
+            <li><strong>Dualista</strong>: autonomia plena — legislação, princípios e justiça especializada próprios.</li>
+            <li><strong>Intermediária</strong>: autonomia relativa, com recurso subsidiário ao CPC (art. 769/CLT).</li>
+            <li><strong>Posição moderna</strong> (arts. 15 e 1046, §2º do CPC): o DPT é um <em>subsistema</em> da Teoria Geral do Processo, compartilhando princípios e institutos comuns.</li>
+          </ul>
+          <h4>Fontes formais diretas</h4>
+          <p><strong>CF</strong> (direitos fundamentais art. 5º, direitos trabalhistas art. 7º, organização da JT arts. 92 e 111-117) → <strong>CLT</strong> (cláusula de barreira art. 769) → <strong>CPC</strong> (arts. 15 e 1046, §2º; normas fundamentais arts. 1º a 12) → legislação extravagante e subsidiária → tratados/convenções da OIT → regimentos internos e resoluções → costumes (ex.: mandato tácito, art. 791, §3º/CLT).</p>
+          <h4>Fontes formais indiretas</h4>
+          <p>Doutrina; jurisprudência (Súmulas e OJs do TST — não vinculantes); Súmulas Vinculantes; precedentes; teses vinculantes do TST.</p>
+          <h4>Fontes de explicitação</h4>
+          <p>Analogia, princípios gerais de direito e equidade (art. 8º da CLT; art. 4º da LINDB; art. 766/CLT; art. 140 do CPC — vedação ao <em>non liquet</em>).</p>`,
+        flashcards:[
+          {p:'Quais as 3 correntes tradicionais sobre a autonomia do DPT?', r:'Monista (sem autonomia), Dualista (autonomia plena) e Intermediária (autonomia relativa, recurso subsidiário ao CPC).'},
+          {p:'Qual a posição moderna sobre a autonomia do DPT?', r:'O DPT é um subsistema da Teoria Geral do Processo — arts. 15 e 1046, §2º do CPC.'},
+          {p:'O que é a "cláusula de barreira/abertura" e onde está prevista?', r:'Art. 769 da CLT — permite o uso subsidiário do CPC quando há lacuna e compatibilidade com os princípios do processo do trabalho.'},
+          {p:'Cite 2 exemplos de costume como fonte do DPT.', r:'Mandato tácito (art. 791, §3º/CLT) e o protesto (art. 795, caput, CLT).'},
+          {p:'As Súmulas do TST são fontes diretas ou indiretas?', r:'Indiretas — não são obrigatórias, refletem a prática dos Tribunais.'}
+        ]},
+    ] },
+  { id:'direito-familia', numeral:'II', nome:'Direito de Família',
+    dates:{ 'AV1':'17/09/26', 'AV2':'29/10/26', 'AV Final':'26/11/26', '2ª chamada':'12/11/26', 'Especial':'10/12/26' },
+    temas: [
+      { id:'df-conceito-familia', titulo:'Conceito de Família e de Direito de Família',
+        resumo:`<h4>Direito de Família</h4>
+          <p>Conjunto de normas jurídicas que regulam as múltiplas relações familiares. Integra o Direito Civil, logo o Direito Privado.</p>
+          <h4>O que é família?</h4>
+          <ul>
+            <li><strong>CR/88, art. 226</strong>: a família é a base da sociedade.</li>
+            <li><strong>Declaração Universal dos Direitos Humanos (ONU, 1948), art. 16</strong>: núcleo natural e fundamental da sociedade.</li>
+            <li>É <strong>fato natural e social</strong> — anterior ao Direito e ao próprio Estado; muda de forma e conteúdo conforme o local e o tempo (daí a dificuldade de um conceito atemporal).</li>
+            <li>Torna-se <strong>fato jurídico</strong> ao gerar consequências jurídicas — o Direito se preocupa com a família por ela ser considerada base da sociedade.</li>
+          </ul>
+          <h4>A "moldura" jurídica da família até 1988</h4>
+          <p>Desde a independência do Brasil (1822) até a CR/88, as Constituições reconheciam apenas o <strong>casamento</strong> como forma de família — excluindo uniões informais.</p>
+          <blockquote><strong>CR/1967, art. 167</strong>: "A família é constituída pelo casamento e terá direito à proteção dos Poderes Públicos." <strong>CC/1916, art. 229</strong>: "Criando a família legítima, o casamento legitima os filhos comuns, antes dele nascidos ou concebidos."</blockquote>
+          <p>O CC/1916 regulava a família em função de um projeto específico: a <strong>família proprietária de bens (burguesa)</strong>, na qual o marido era chefe, em posição superior à mulher e aos filhos.</p>
+          <h4>A revolução da CR/88</h4>
+          <p>Colocou a pessoa (dignidade da pessoa humana, art. 1º, III) no centro do ordenamento, provocando:</p>
+          <ul>
+            <li><strong>a) Família plural</strong> (art. 226, §§3º e 4º): casamento deixa de ser sinônimo de família e passa a ser apenas uma espécie de entidade familiar — união estável e família monoparental são expressamente reconhecidas.</li>
+            <li><strong>b) Igualdade entre homens e mulheres</strong> (art. 226, §5º).</li>
+            <li><strong>c) Igualdade entre os filhos</strong> (art. 227, §6º).</li>
+            <li><strong>d) Liberdade</strong> (art. 226, §§6º e 7º): aumento da autonomia privada e diminuição da interferência do Estado na família, manifestada em várias frentes:
+              <ul>
+                <li>Liberdade para escolher a modalidade de família (STF, RE 878.694/MG — que, em conjunto com o RE 646721, equiparou os regimes sucessórios de cônjuge e companheiro, tanto em uniões hetero quanto homoafetivas).</li>
+                <li>Liberdade para escolher com quem formar família (STF, ADI 4277 e ADPF 132, 2011 — união homoafetiva).</li>
+                <li>Liberdade para dissolver a entidade familiar sem observar prazo ou pré-requisitos (EC 66/2010).</li>
+                <li>Liberdade para escolher o próprio regime de bens, inclusive para maiores de 70 anos (STF, ARE 1.309.642, Tema 1.236, julgado em 2024): o regime de separação obrigatória de bens do art. 1.641, II/CC pode ser afastado por manifestação expressa de vontade das partes, mediante escritura pública (no casamento, exige-se autorização judicial).</li>
+              </ul>
+            </li>
+          </ul>
+          <p><strong>Vale lembrar</strong>: o Direito tem por principal função harmonizar as relações sociais.</p>
+          <p>A família deixa de ser vista por sua função econômica e passa a valorizar os <strong>laços afetivos</strong> — o respeito aos sentimentos supera a proteção ao patrimônio.</p>`,
+        flashcards:[
+          {p:'O que diz o art. 226 da CR/88 sobre a família?', r:'Que a família é a base da sociedade.'},
+          {p:'Antes da CR/88, qual era a única forma de família reconhecida no Brasil?', r:'O casamento (CR/1967, art. 167; CC/1916, art. 229).'},
+          {p:'Quais as 4 principais mudanças trazidas pela CR/88 no Direito de Família?', r:'Família plural (art. 226, §§3º e 4º), igualdade entre homens e mulheres (art. 226, §5º), igualdade entre os filhos (art. 227, §6º) e liberdade (art. 226, §§6º e 7º).'},
+          {p:'Qual o principal elemento da concepção contemporânea de família?', r:'A afetividade (personalização da família).'}
+        ]},
+    ] },
+  { id:'processo-penal', numeral:'III', nome:'Processo Penal',
+    dates:{ 'AV1':'22/09/26', 'AV2':'26/10/26', 'AV Final':'23/11/26', '2ª chamada':'09/11/26', 'Especial':'07/12/26' },
+    temas: [
+      { id:'pp-fontes', titulo:'Fontes do Direito Processual Penal',
+        resumo:`<p>Fonte é o local de onde provém algo — tudo que pertence ao Direito Processual Penal (DPP) constitui suas fontes.</p>
+          <h4>Fontes formais x fontes substanciais</h4>
+          <p><strong>Formais</strong>: é a própria lei, a lei escrita/materializada.</p>
+          <p><strong>Substanciais</strong>: a vontade por trás da norma (todo norma tem um "desejo") — é abstrata, não comportando classificação em subtipos.</p>
+          <h4>Fontes formais diretas</h4>
+          <p>São as que já constituem lei pronta e acabada:</p>
+          <ul>
+            <li><strong>Principais</strong>: Código de Processo Penal e Constituição Federal.</li>
+            <li><strong>Extravagantes</strong>: como o CPP não consegue reger todas as matérias processuais penais, surgem leis que giram em torno dele — subdivididas em <em>complementares</em> (completam o CPP) e <em>modificativas</em> (alteram o CPP: nova redação, novo parágrafo, supressão de inciso, nova interpretação).</li>
+            <li><strong>Orgânicas principais</strong>: leis de organização judiciária (leis estaduais — cada unidade federativa organiza seu próprio Poder Judiciário).</li>
+            <li><strong>Orgânicas complementares</strong>: regimentos internos dos tribunais (cada tribunal tem o seu).</li>
+          </ul>
+          <h4>Fontes formais supletivas</h4>
+          <p>Ainda não são lei acabada, mas podem gerar uma lei:</p>
+          <ul>
+            <li><strong>Indiretas</strong> (maior proximidade com a produção da lei): costumes, jurisprudência, princípios.</li>
+            <li><strong>Secundárias</strong> (menor proximidade): doutrina, direito histórico, direito estrangeiro.</li>
+          </ul>`,
+        flashcards:[
+          {p:'Qual a diferença entre fonte formal e fonte substancial no DPP?', r:'Formal é a própria lei (escrita/materializada); substancial é a vontade/desejo por trás da norma, de natureza abstrata.'},
+          {p:'Quais são as fontes formais diretas principais do DPP?', r:'Código de Processo Penal e Constituição Federal.'},
+        ]},
+    ] },
+  { id:'direito-tributario', numeral:'IV', nome:'Direito Tributário',
+    dates:{ 'AV1':'24/09/26', 'AV2':'27/12/26', 'AV Final':'24/11/26', '2ª chamada':'10/11/26', 'Especial':'10/12/26' },
+    temas: [
+      { id:'dt-competencia-fontes', titulo:'Competência Tributária e Fontes do Direito Tributário',
+        resumo:`<h4>Repartição constitucional da competência tributária</h4>
+          <p>A CF distribui uma parcela do poder de tributar entre União, Estados, DF e Municípios.</p>`,
+        flashcards:[
+          {p:'Qual a competência dos Municípios em matéria tributária?', r:'Competência suplementar (art. 30/CF).'},
+        ]},
+    ] },
+  { id:'direito-administrativo', numeral:'V', nome:'Direito Administrativo',
+    dates:{ 'AV1':'25/09/26', 'AV2':'30/10/26', 'AV Final':'27/11/26' },
+    temas: [
+      { id:'da-agentes-publicos', titulo:'Agentes Públicos: Conceito e Espécies',
+        resumo:`<h4>Conceito</h4>
+          <p>Agentes públicos é o gênero: todo aquele que exerce atividade em nome da Administração Pública.</p>
+          <h4>Espécies</h4>
+          <ul>
+            <li>Agentes políticos</li>
+            <li>Servidores públicos</li>
+            <li>Militares</li>
+            <li>Particulares em colaboração com a administração</li>
+          </ul>`,
+        flashcards:[
+          {p:'O que caracteriza um agente político?', r:'Vínculo político-eleitoral criado por processo eleitoral.'},
+        ]},
+    ] },
+];
+
+let currentTab = 'inicio';
+let storageCache = {};
+
+function parseData(str){
+  const [d,m,y] = str.split('/').map(Number);
+  return new Date(2000+y, m-1, d);
+}
+
+async function getStorage(key, fallback){
+  try{
+    const r = await window.storage.get(key, false);
+    return r ? JSON.parse(r.value) : fallback;
+  }catch(e){ return fallback; }
+}
+async function setStorage(key, value){
+  try{ await window.storage.set(key, JSON.stringify(value), false); }catch(e){}
+}
+
+async function getRevisado(temaId){
+  if(storageCache['rev:'+temaId] !== undefined) return storageCache['rev:'+temaId];
+  const v = await getStorage('rev:'+temaId, false);
+  storageCache['rev:'+temaId] = v;
+  return v;
+}
+async function toggleRevisado(temaId){
+  const cur = await getRevisado(temaId);
+  storageCache['rev:'+temaId] = !cur;
+  await setStorage('rev:'+temaId, !cur);
+  render();
+}
+
+async function getExtraTemas(subjectId){
+  const key = 'extra-temas:'+subjectId;
+  if(storageCache[key] !== undefined) return storageCache[key];
+  const v = await getStorage(key, []);
+  storageCache[key] = v;
+  return v;
+}
+async function addExtraTema(subjectId, tema){
+  const key = 'extra-temas:'+subjectId;
+  const list = await getExtraTemas(subjectId);
+  list.push(tema);
+  storageCache[key] = list;
+  await setStorage(key, list);
+}
+
+function allTemas(subject, extra){
+  return [...subject.temas, ...extra];
+}
+
+function nextExam(){
+  const now = new Date();
+  let best = null;
+  SUBJECTS.forEach(s=>{
+    Object.entries(s.dates).forEach(([tipo,str])=>{
+      const d = parseData(str);
+      if(d >= now && (!best || d < best.date)){
+        best = {date:d, tipo, subject:s.nome};
+      }
+    });
+  });
+  return best;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  let html = `<button class="${currentTab==='inicio'?'active':''}" onclick="goTo('inicio')">Início</button>`;
+  SUBJECTS.forEach(s=>{
+    html += `<button class="${currentTab===s.id?'active':''}" onclick="goTo('${s.id}')"><span class="num">${s.numeral}</span>${s.nome}</button>`;
+  });
+  tabs.innerHTML = html;
+}
+
+function goTo(id){
+  currentTab = id;
+  render();
+}
+
+async function renderInicio(){
+  const main = document.getElementById('main');
+  const next = nextExam();
+  const now = new Date();
+  let countdownHtml = '';
+  if(next){
+    const days = Math.ceil((next.date - now) / 86400000);
+    countdownHtml = `
+      <div class="countdown-card">
+        <div class="eyebrow">Próxima prova</div>
+        <div class="big">${days} dia${days===1?'':'s'}</div>
+        <div class="sub">${next.tipo} de ${next.subject} — ${next.date.toLocaleDateString('pt-BR')}</div>
+      </div>`;
+  }
+
+  const rows = [];
+  SUBJECTS.forEach(s=>{
+    Object.entries(s.dates).forEach(([tipo,str])=>{
+      rows.push({subject:s.nome, tipo, date:parseData(str), str});
+    });
+  });
+  rows.sort((a,b)=>a.date-b.date);
+
+  let tableRows = rows.map(r=>{
+    const soon = r.date >= now && (r.date - now) < 7*86400000;
+    return `<tr class="${soon?'soon':''}">
+      <td class="materia">${r.subject}</td>
+      <td>${r.tipo}</td>
+      <td class="dim">${r.str}</td>
+    </tr>`;
+  }).join('');
+
+  main.innerHTML = `
+    ${countdownHtml}
+    <table class="pauta">
+      <caption>Calendário de provas</caption>
+      <thead><tr><th>Matéria</th><th>Avaliação</th><th>Data</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+  `;
+}
+
+async function renderMateria(subject){
+  const main = document.getElementById('main');
+  const extra = await getExtraTemas(subject.id);
+  const temas = allTemas(subject, extra);
+
+  let revisadoCount = 0;
+  for(const t of temas){ if(await getRevisado(t.id)) revisadoCount++; }
+  const pct = temas.length ? Math.round(100*revisadoCount/temas.length) : 0;
+
+  const datasHtml = Object.entries(subject.dates).map(([tipo,str])=>
+    `<span>${tipo}: <b>${str}</b></span>`
+  ).join('');
+
+  let temasHtml = '';
+  if(temas.length === 0){
+    temasHtml = `<div class="empty">Nenhum tema cadastrado ainda nesta matéria.<br>Envie seus materiais (anotações, roteiros, slides ou gravações de aula) para o Claude no chat, ou adicione um tema manualmente abaixo.</div>`;
+  } else {
+    for(const t of temas){
+      const rev = await getRevisado(t.id);
+      const fcHtml = (t.flashcards||[]).map((fc,i)=>`
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-face front">${fc.p}</div>
+            <div class="flashcard-face back">${fc.r}</div>
+          </div>
+        </div>
+      `).join('');
+      temasHtml += `
+        <div class="tema" id="tema-${t.id}">
+          <div class="tema-head" onclick="toggleTemaOpen('${t.id}')">
+            <span class="chev">▸</span>
+            <span class="titulo">${t.titulo}</span>
+            <span class="revisado-pill ${rev?'on':''}" onclick="event.stopPropagation(); toggleRevisado('${t.id}')">${rev?'revisado':'a revisar'}</span>
+          </div>
+          <div class="tema-body">
+            <div class="resumo">${t.resumo}</div>
+            ${fcHtml ? `<div class="section-label">Flashcards</div><div class="flashcards">${fcHtml}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  }
+
+  main.innerHTML = `
+    <div class="materia-head">
+      <h2 class="serif">${subject.nome}</h2>
+      <div class="datas">${datasHtml}</div>
+      ${temas.length ? `
+        <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">${revisadoCount} de ${temas.length} temas revisados (${pct}%)</div>
+      ` : ''}
+    </div>
+    ${temasHtml}
+    <button class="add-tema-btn" onclick="openModal('${subject.id}')">+ Adicionar tema manualmente</button>
+  `;
+}
+
+function toggleTemaOpen(id){
+  const el = document.getElementById('tema-'+id);
+  el.classList.toggle('open');
+}
+
+async function render(){
+  renderTabs();
+  if(currentTab === 'inicio'){
+    await renderInicio();
+  } else {
+    const subject = SUBJECTS.find(s=>s.id===currentTab);
+    await renderMateria(subject);
+  }
+}
+
+let modalSubjectId = null;
+function openModal(subjectId){
+  modalSubjectId = subjectId;
+  document.getElementById('novoTitulo').value = '';
+  document.getElementById('novoResumo').value = '';
+  document.getElementById('fcList').innerHTML = '';
+  addFlashcardRow();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function addFlashcardRow(){
+  const wrap = document.createElement('div');
+  wrap.className = 'fc-row';
+  wrap.innerHTML = `
+    <input type="text" placeholder="Pergunta" class="fc-p">
+    <input type="text" placeholder="Resposta" class="fc-r">
+    <button onclick="this.parentElement.remove()">×</button>
+  `;
+  document.getElementById('fcList').appendChild(wrap);
+}
+async function salvarTema(){
+  const titulo = document.getElementById('novoTitulo').value.trim();
+  const resumo = document.getElementById('novoResumo').value.trim();
+  if(!titulo){ return; }
+  const flashcards = [];
+  document.querySelectorAll('#fcList .fc-row').forEach(row=>{
+    const p = row.querySelector('.fc-p').value.trim();
+    const r = row.querySelector('.fc-r').value.trim();
+    if(p && r) flashcards.push({p,r});
+  });
+  const tema = {
+    id: modalSubjectId+'-'+Date.now(),
+    titulo,
+    resumo: '<p>'+resumo.replace(/\n/g,'</p><p>')+'</p>',
+    flashcards
+  };
+  await addExtraTema(modalSubjectId, tema);
+  closeModal();
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
