@@ -4,294 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Direito — 8º Período</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#12162A;
-    --surface:#1B2140;
-    --surface-2:#232B4D;
-    --paper:#EDE7D8;
-    --paper-text:#241F14;
-    --brass:#B98D4A;
-    --brass-dim:#8A6B3B;
-    --sage:#7C8B63;
-    --urgent:#A94438;
-    --text:#E9E6DC;
-    --text-dim:#A9AFC7;
-    --border:#2C3357;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'IBM Plex Sans', sans-serif;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  h1,h2,h3,.serif{font-family:'Source Serif 4', serif;}
-  .app{max-width:760px;margin:0 auto;padding:0 0 64px;}
-
-  header.top{
-    position:sticky; top:0; z-index:10;
-    background:var(--bg);
-    border-bottom:1px solid var(--border);
-    padding:18px 20px 0;
-  }
-  header.top .title{
-    font-size:1.15rem;
-    font-weight:600;
-    letter-spacing:0.01em;
-    margin:0 0 14px;
-    color:var(--text);
-  }
-  header.top .title em{
-    font-style:italic;
-    color:var(--brass);
-  }
-  nav.tabs{
-    display:flex;
-    gap:4px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    padding-bottom:2px;
-  }
-  nav.tabs::-webkit-scrollbar{display:none;}
-  nav.tabs button{
-    flex:0 0 auto;
-    background:none;
-    border:none;
-    color:var(--text-dim);
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:0.88rem;
-    padding:10px 14px 12px;
-    cursor:pointer;
-    border-bottom:2px solid transparent;
-    white-space:nowrap;
-  }
-  nav.tabs button .num{
-    color:var(--brass-dim);
-    font-family:'Source Serif 4', serif;
-    font-style:italic;
-    margin-right:6px;
-  }
-  nav.tabs button.active{
-    color:var(--text);
-    border-bottom:2px solid var(--brass);
-  }
-  nav.tabs button.active .num{color:var(--brass);}
-
-  main{padding:24px 20px 0;}
-
-  .countdown-card{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:4px;
-    padding:22px 22px;
-    margin-bottom:28px;
-  }
-  .countdown-card .eyebrow{
-    color:var(--text-dim);
-    font-size:0.8rem;
-    margin-bottom:8px;
-  }
-  .countdown-card .big{
-    font-family:'Source Serif 4', serif;
-    font-size:2.1rem;
-    font-weight:600;
-    color:var(--brass);
-    line-height:1.2;
-  }
-  .countdown-card .sub{
-    color:var(--text-dim);
-    font-size:0.92rem;
-    margin-top:4px;
-  }
-
-  table.pauta{
-    width:100%;
-    border-collapse:collapse;
-    font-size:0.88rem;
-  }
-  table.pauta caption{
-    text-align:left;
-    font-family:'Source Serif 4', serif;
-    font-size:1.05rem;
-    margin-bottom:12px;
-    color:var(--text);
-  }
-  table.pauta th{
-    text-align:left;
-    color:var(--text-dim);
-    font-weight:500;
-    font-size:0.76rem;
-    padding:0 10px 8px 0;
-    border-bottom:1px solid var(--border);
-  }
-  table.pauta td{
-    padding:10px 10px 10px 0;
-    border-bottom:1px solid var(--border);
-    color:var(--text);
-    vertical-align:top;
-  }
-  table.pauta td.materia{font-family:'Source Serif 4', serif;}
-  table.pauta tr.soon td{color:var(--brass);}
-  table.pauta td.dim{color:var(--text-dim);}
-
-  .materia-head{margin-bottom:18px;}
-  .materia-head h2{margin:0 0 4px; font-size:1.5rem;}
-  .materia-head .datas{
-    display:flex; flex-wrap:wrap; gap:6px 14px;
-    font-size:0.78rem; color:var(--text-dim); margin-top:8px;
-  }
-  .materia-head .datas span b{color:var(--text);}
-
-  .progress-bar{
-    height:5px; background:var(--surface-2); border-radius:3px; overflow:hidden; margin-top:14px;
-  }
-  .progress-bar .fill{height:100%; background:var(--sage);}
-  .progress-label{font-size:0.76rem; color:var(--text-dim); margin-top:6px;}
-
-  .empty{
-    color:var(--text-dim);
-    font-size:0.92rem;
-    padding:28px 0;
-    line-height:1.6;
-  }
-
-  .tema{
-    border:1px solid var(--border);
-    border-radius:4px;
-    margin-bottom:12px;
-    background:var(--surface);
-    overflow:hidden;
-  }
-  .tema-head{
-    display:flex; align-items:center; gap:10px;
-    padding:14px 16px;
-    cursor:pointer;
-  }
-  .tema-head .chev{
-    color:var(--brass);
-    font-size:0.8rem;
-    transition:transform 0.15s ease;
-  }
-  .tema.open .tema-head .chev{transform:rotate(90deg);}
-  .tema-head .titulo{
-    flex:1;
-    font-family:'Source Serif 4', serif;
-    font-size:1.05rem;
-  }
-  .tema-head .revisado-pill{
-    font-size:0.72rem;
-    padding:3px 9px;
-    border-radius:20px;
-    border:1px solid var(--border);
-    color:var(--text-dim);
-    cursor:pointer;
-    white-space:nowrap;
-  }
-  .tema-head .revisado-pill.on{
-    background:rgba(124,139,99,0.18);
-    border-color:var(--sage);
-    color:var(--sage);
-  }
-
-  .tema-body{
-    display:none;
-    padding:0 16px 20px;
-  }
-  .tema.open .tema-body{display:block;}
-
-  .resumo{
-    background:var(--paper);
-    color:var(--paper-text);
-    border-radius:3px;
-    padding:16px 18px;
-    font-size:0.92rem;
-    line-height:1.65;
-  }
-  .resumo h4{
-    font-family:'Source Serif 4', serif;
-    font-size:0.95rem;
-    margin:0 0 8px;
-    color:var(--paper-text);
-  }
-  .resumo blockquote{
-    margin:12px 0 0;
-    padding-left:12px;
-    border-left:3px solid var(--brass);
-    font-style:italic;
-  }
-  .resumo ul{margin:8px 0 0; padding-left:20px;}
-  .resumo strong{color:#5c3d1a;}
-
-  .section-label{
-    font-size:0.76rem;
-    color:var(--text-dim);
-    margin:18px 0 8px;
-  }
-
-  .flashcards{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-  @media (max-width:480px){
-    .flashcards{grid-template-columns:1fr;}
-  }
-  .flashcard{
-    perspective:1000px;
-    height:120px;
-    cursor:pointer;
-  }
-  .flashcard-inner{
-    position:relative; width:100%; height:100%;
-    transition:transform 0.5s;
-    transform-style:preserve-3d;
-  }
-  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
-  .flashcard-face{
-    position:absolute; inset:0;
-    backface-visibility:hidden;
-    border-radius:3px;
-    padding:12px;
-    font-size:0.84rem;
-    line-height:1.4;
-    display:flex; align-items:center;
-    overflow-y:auto;
-  }
-  .flashcard-face.front{
-    background:var(--paper); color:var(--paper-text);
-    border:1px solid var(--brass-dim);
-  }
-  .flashcard-face.back{
-    background:var(--surface-2); color:var(--text);
-    border:1px solid var(--sage);
-    transform:rotateY(180deg);
-  }
-
-  .add-tema-btn{
-    display:block;
-    width:100%;
-    background:none;
-    border:1px dashed var(--border);
-    color:var(--text-dim);
-    padding:12px;
-    border-radius:4px;
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:0.85rem;
-    cursor:pointer;
-    margin-top:6px;
-  }
-  .add-tema-btn:hover{color:var(--brass); border-color:var(--brass-dim);}
+:root {
+  --bg: #12162A;
+  --surface: #1B2140;
+  --surface-2: #232B4D;
+  --paper: #EDE7D8;
+  --paper-text: #241F14;
+  --brass: #B98D4A;
+  --text: #E9E6DC;
+  --text-dim: #A9AFC7;
+  --border: #2C3357;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+.app { max-width: 760px; margin: 0 auto; padding: 20px; }
+header.top {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 20px;
+  z-index: 10;
+}
+header.top .title { font-size: 1.5rem; margin: 0 0 15px; color: var(--text); }
+nav.tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+nav.tabs button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+nav.tabs button.active {
+  background: var(--brass);
+  color: #1B1204;
+  border-color: var(--brass);
+}
+main { padding: 20px 0; }
+.countdown-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.countdown-card .big { font-size: 2rem; color: var(--brass); margin: 10px 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table th, table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table th {
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+.tema {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+.tema-head {
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tema-head:hover { background: var(--surface-2); }
+.chev { color: var(--brass); transition: transform 0.3s; }
+.tema.open .chev { transform: rotate(90deg); }
+.titulo { flex: 1; font-weight: bold; }
+.tema-body {
+  display: none;
+  padding: 15px;
+  background: var(--surface-2);
+}
+.tema.open .tema-body { display: block; }
+.resumo {
+  background: var(--paper);
+  color: var(--paper-text);
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+.flashcards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 600px) {
+  .flashcards { grid-template-columns: 1fr; }
+}
+.flashcard {
+  background: var(--paper);
+  color: var(--paper-text);
+  padding: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--brass);
+}
+.flashcard:hover { background: var(--paper); opacity: 0.9; }
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="title">Direito — <em>8º Período</em></div>
+    <div class="title">Direito — 8º Período</div>
     <nav class="tabs" id="tabs"></nav>
   </header>
   <main id="main"></main>
@@ -299,214 +142,185 @@
 
 <script>
 const SUBJECTS = [
-  { id:'processo-trabalho', numeral:'I', nome:'Processo do Trabalho',
-    dates:{ 'AV1':'16/09/26', 'AV2':'19/10/26', 'AV Final':'25/11/26', '2ª chamada':'11/11/26', 'Especial':'09/12/26' },
+  {
+    id: 'processo-trabalho',
+    numeral: 'I',
+    nome: 'Processo do Trabalho',
+    dates: { 'AV1': '16/09/26', 'AV2': '19/10/26', 'AV Final': '25/11/26' },
     temas: [
-      { id:'pt-tgp', titulo:'TGP: Jurisdição, Ação e Processo',
-        resumo:`<h4>Jurisdição</h4>
-<p>É a aplicação da lei a situações concretas, de forma racional e argumentativa. Características: <strong>terceiro imparcial</strong> (não neutro), <strong>órgão de decisão</strong> (não consultivo) e <strong>decisão insuscetível de controle externo</strong> ao Judiciário.</p>
-<p><strong>Escopos:</strong> social (pacificação/lide sociológica), político (garantia de liberdades), educacional (efeito pedagógico) e jurídico (aplicação da norma ao caso concreto).</p>
-<p><strong>Jurisdição trabalhista</strong>: função estatal exercida para solucionar conflitos trabalhistas de forma definitiva. Marcas: desigualdade entre as partes e protagonismo judicial.</p>
-<h4>Ação</h4>
-<p>Direito de provocar a atividade jurisdicional. Condições da ação (art. 17 e 485, VI do CPC): <strong>interesse</strong> (utilidade/necessidade) e <strong>legitimidade</strong> (pertinência subjetiva).</p>
-<h4>Processo</h4>
-<p>Processo é o instrumento previsto em lei para exercer a jurisdição; procedimento é a exteriorização do processo pelos atos praticados.</p>`,
-        flashcards:[
-          {p:'Quais as 3 características da jurisdição?', r:'Terceiro imparcial; órgão de decisão; decisão insuscetível de controle externo.'},
-          {p:'Quais os 4 escopos da jurisdição?', r:'Social, político, educacional e jurídico.'}
-        ]},
-    ] },
-  { id:'direito-familia', numeral:'II', nome:'Direito de Família',
-    dates:{ 'AV1':'17/09/26', 'AV2':'29/10/26', 'AV Final':'26/11/26', '2ª chamada':'12/11/26', 'Especial':'10/12/26' },
+      {
+        id: 'pt-tgp',
+        titulo: 'TGP: Jurisdição, Ação e Processo',
+        resumo: 'Jurisdição: aplicação da lei a situações concretas. Características: terceiro imparcial, órgão de decisão, decisão insuscetível de controle externo. Ação: direito de provocar a atividade jurisdicional. Processo: instrumento previsto em lei para exercer a jurisdição.',
+        flashcards: [
+          { p: 'O que é jurisdição?', r: 'Aplicação da lei a situações concretas, de forma racional e argumentativa.' },
+          { p: 'Quais os escopos da jurisdição?', r: 'Social, político, educacional e jurídico.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'direito-familia',
+    numeral: 'II',
+    nome: 'Direito de Família',
+    dates: { 'AV1': '17/09/26', 'AV2': '29/10/26', 'AV Final': '26/11/26' },
     temas: [
-      { id:'df-conceito-familia', titulo:'Conceito de Família',
-        resumo:`<h4>Direito de Família</h4>
-<p>Conjunto de normas jurídicas que regulam as múltiplas relações familiares. Integra o Direito Civil.</p>
-<h4>O que é família?</h4>
-<ul>
-<li><strong>CR/88, art. 226</strong>: a família é a base da sociedade.</li>
-<li>É <strong>fato natural e social</strong> anterior ao Direito.</li>
-<li>Torna-se <strong>fato jurídico</strong> ao gerar consequências jurídicas.</li>
-</ul>`,
-        flashcards:[
-          {p:'O que diz o art. 226 da CR/88?', r:'A família é a base da sociedade.'},
-          {p:'Qual o principal elemento da família contemporânea?', r:'A afetividade.'}
-        ]},
-    ] },
-  { id:'processo-penal', numeral:'III', nome:'Processo Penal',
-    dates:{ 'AV1':'22/09/26', 'AV2':'26/10/26', 'AV Final':'23/11/26', '2ª chamada':'09/11/26', 'Especial':'07/12/26' },
+      {
+        id: 'df-conceito',
+        titulo: 'Conceito de Família',
+        resumo: 'Conjunto de normas jurídicas que regulam as relações familiares. A família é a base da sociedade (art. 226 CR/88). É fato natural e social anterior ao Direito.',
+        flashcards: [
+          { p: 'O que é família segundo a CR/88?', r: 'Base da sociedade. Pode ser constituída por casamento, união estável ou família monoparental.' },
+          { p: 'Qual o elemento principal da família contemporânea?', r: 'A afetividade.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'processo-penal',
+    numeral: 'III',
+    nome: 'Processo Penal',
+    dates: { 'AV1': '22/09/26', 'AV2': '26/10/26', 'AV Final': '23/11/26' },
     temas: [
-      { id:'pp-fontes', titulo:'Fontes do Direito Processual Penal',
-        resumo:`<h4>Fontes formais diretas</h4>
-<ul>
-<li><strong>Principais</strong>: Código de Processo Penal e Constituição Federal.</li>
-<li><strong>Extravagantes</strong>: leis complementares e modificativas do CPP.</li>
-</ul>`,
-        flashcards:[
-          {p:'Quais são as fontes formais diretas principais do DPP?', r:'Código de Processo Penal e Constituição Federal.'}
-        ]},
-    ] },
-  { id:'direito-tributario', numeral:'IV', nome:'Direito Tributário',
-    dates:{ 'AV1':'24/09/26', 'AV2':'27/12/26', 'AV Final':'24/11/26' },
+      {
+        id: 'pp-fontes',
+        titulo: 'Fontes do Direito Processual Penal',
+        resumo: 'Fontes formais diretas principais: Código de Processo Penal e Constituição Federal. Fontes formais diretas: lei, decreto. Fontes formais indiretas: jurisprudência, costumes, doutrina.',
+        flashcards: [
+          { p: 'Quais são as fontes formais diretas principais do DPP?', r: 'Código de Processo Penal e Constituição Federal.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'direito-tributario',
+    numeral: 'IV',
+    nome: 'Direito Tributário',
+    dates: { 'AV1': '24/09/26', 'AV2': '27/12/26', 'AV Final': '24/11/26' },
     temas: [
-      { id:'dt-competencia', titulo:'Competência Tributária',
-        resumo:`<h4>Repartição de competências</h4>
-<p>A Constituição Federal distribui o poder de tributar entre União, Estados, DF e Municípios.</p>`,
-        flashcards:[
-          {p:'Quem estabelece a competência tributária?', r:'A Constituição Federal.'}
-        ]},
-    ] },
-  { id:'direito-administrativo', numeral:'V', nome:'Direito Administrativo',
-    dates:{ 'AV1':'25/09/26', 'AV2':'30/10/26', 'AV Final':'27/11/26' },
+      {
+        id: 'dt-competencia',
+        titulo: 'Competência Tributária',
+        resumo: 'Repartição de competências tributárias entre União, Estados, DF e Municípios conforme a Constituição Federal. Cada ente tem suas atribuições específicas de tributação.',
+        flashcards: [
+          { p: 'Quem estabelece a competência tributária?', r: 'A Constituição Federal.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'direito-administrativo',
+    numeral: 'V',
+    nome: 'Direito Administrativo',
+    dates: { 'AV1': '25/09/26', 'AV2': '30/10/26', 'AV Final': '27/11/26' },
     temas: [
-      { id:'da-agentes', titulo:'Agentes Públicos',
-        resumo:`<h4>Conceito</h4>
-<p>Agentes públicos: todo aquele que exerce atividade em nome da Administração Pública.</p>
-<h4>Espécies</h4>
-<ul>
-<li>Agentes políticos</li>
-<li>Servidores públicos</li>
-<li>Militares</li>
-</ul>`,
-        flashcards:[
-          {p:'O que é um agente público?', r:'Todo aquele que exerce atividade em nome da Administração Pública.'}
-        ]},
-    ] },
+      {
+        id: 'da-agentes',
+        titulo: 'Agentes Públicos',
+        resumo: 'Agentes públicos: todo aquele que exerce atividade em nome da Administração Pública. Espécies: agentes políticos, servidores públicos, militares, particulares em colaboração.',
+        flashcards: [
+          { p: 'O que é um agente público?', r: 'Todo aquele que exerce atividade em nome da Administração Pública.' }
+        ]
+      }
+    ]
+  }
 ];
 
 let currentTab = 'inicio';
 
-function parseData(str){
-  const [d,m,y] = str.split('/').map(Number);
-  return new Date(2000+y, m-1, d);
+function parseData(str) {
+  const [d, m, y] = str.split('/').map(Number);
+  return new Date(2000 + y, m - 1, d);
 }
 
-function nextExam(){
+function nextExam() {
   const now = new Date();
   let best = null;
-  SUBJECTS.forEach(s=>{
-    Object.entries(s.dates).forEach(([tipo,str])=>{
+  SUBJECTS.forEach(s => {
+    Object.entries(s.dates).forEach(([tipo, str]) => {
       const d = parseData(str);
-      if(d >= now && (!best || d < best.date)){
-        best = {date:d, tipo, subject:s.nome};
+      if (d >= now && (!best || d < best.date)) {
+        best = { date: d, tipo, subject: s.nome };
       }
     });
   });
   return best;
 }
 
-function renderTabs(){
+function renderTabs() {
   const tabs = document.getElementById('tabs');
-  let html = `<button class="${currentTab==='inicio'?'active':''}" onclick="goTo('inicio')">Início</button>`;
-  SUBJECTS.forEach(s=>{
-    html += `<button class="${currentTab===s.id?'active':''}" onclick="goTo('${s.id}')"><span class="num">${s.numeral}</span>${s.nome}</button>`;
+  let html = `<button class="${currentTab === 'inicio' ? 'active' : ''}" onclick="goTo('inicio')">Início</button>`;
+  SUBJECTS.forEach(s => {
+    html += `<button class="${currentTab === s.id ? 'active' : ''}" onclick="goTo('${s.id}')">${s.numeral}. ${s.nome}</button>`;
   });
   tabs.innerHTML = html;
 }
 
-function goTo(id){
+function goTo(id) {
   currentTab = id;
   render();
 }
 
-function renderInicio(){
+function renderInicio() {
   const main = document.getElementById('main');
   const next = nextExam();
   const now = new Date();
   let countdownHtml = '';
-  if(next){
+  
+  if (next) {
     const days = Math.ceil((next.date - now) / 86400000);
-    countdownHtml = `
-      <div class="countdown-card">
-        <div class="eyebrow">Próxima prova</div>
-        <div class="big">${days} dia${days===1?'':'s'}</div>
-        <div class="sub">${next.tipo} de ${next.subject}</div>
-      </div>`;
+    countdownHtml = `<div class="countdown-card"><div>Próxima prova</div><div class="big">${days} dias</div><div>${next.tipo} de ${next.subject}</div></div>`;
   }
 
   const rows = [];
-  SUBJECTS.forEach(s=>{
-    Object.entries(s.dates).forEach(([tipo,str])=>{
-      rows.push({subject:s.nome, tipo, date:parseData(str), str});
+  SUBJECTS.forEach(s => {
+    Object.entries(s.dates).forEach(([tipo, str]) => {
+      rows.push({ subject: s.nome, tipo, date: parseData(str), str });
     });
   });
-  rows.sort((a,b)=>a.date-b.date);
+  rows.sort((a, b) => a.date - b.date);
 
-  let tableRows = rows.map(r=>{
-    const soon = r.date >= now && (r.date - now) < 7*86400000;
-    return `<tr class="${soon?'soon':''}">
-      <td class="materia">${r.subject}</td>
-      <td>${r.tipo}</td>
-      <td class="dim">${r.str}</td>
-    </tr>`;
-  }).join('');
+  let tableRows = rows.map(r => `<tr><td>${r.subject}</td><td>${r.tipo}</td><td>${r.str}</td></tr>`).join('');
 
-  main.innerHTML = `
-    ${countdownHtml}
-    <table class="pauta">
-      <caption>Calendário de provas</caption>
-      <thead><tr><th>Matéria</th><th>Avaliação</th><th>Data</th></tr></thead>
-      <tbody>${tableRows}</tbody>
-    </table>
-  `;
+  main.innerHTML = `${countdownHtml}<table><caption>Calendário de provas</caption><thead><tr><th>Matéria</th><th>Tipo</th><th>Data</th></tr></thead><tbody>${tableRows}</tbody></table>`;
 }
 
-function renderMateria(subject){
+function renderMateria(subject) {
   const main = document.getElementById('main');
   const temas = subject.temas;
 
-  const datasHtml = Object.entries(subject.dates).map(([tipo,str])=>
-    `<span>${tipo}: <b>${str}</b></span>`
-  ).join('');
+  const datasHtml = Object.entries(subject.dates).map(([tipo, str]) => `${tipo}: ${str}`).join(' | ');
 
-  let temasHtml = '';
-  if(temas.length === 0){
-    temasHtml = `<div class="empty">Nenhum tema cadastrado.</div>`;
-  } else {
-    for(const t of temas){
-      const fcHtml = (t.flashcards||[]).map((fc,i)=>`
-        <div class="flashcard" onclick="this.classList.toggle('flipped')">
-          <div class="flashcard-inner">
-            <div class="flashcard-face front">${fc.p}</div>
-            <div class="flashcard-face back">${fc.r}</div>
-          </div>
+  let temasHtml = temas.map(t => {
+    const fcHtml = (t.flashcards || []).map(fc => `<div class="flashcard" onclick="alert('${fc.p}\\n\\n${fc.r}')">${fc.p}</div>`).join('');
+    return `
+      <div class="tema" id="tema-${t.id}">
+        <div class="tema-head" onclick="toggleTemaOpen('${t.id}')">
+          <span class="chev">▸</span>
+          <span class="titulo">${t.titulo}</span>
         </div>
-      `).join('');
-      temasHtml += `
-        <div class="tema" id="tema-${t.id}">
-          <div class="tema-head" onclick="toggleTemaOpen('${t.id}')">
-            <span class="chev">▸</span>
-            <span class="titulo">${t.titulo}</span>
-          </div>
-          <div class="tema-body">
-            <div class="resumo">${t.resumo}</div>
-            ${fcHtml ? `<div class="section-label">Flashcards</div><div class="flashcards">${fcHtml}</div>` : ''}
-          </div>
-        </div>`;
-    }
-  }
+        <div class="tema-body">
+          <div class="resumo">${t.resumo}</div>
+          ${fcHtml ? `<div style="font-size:0.9rem; margin-bottom:10px; color: var(--text-dim);">Clique nos cards para ver resposta:</div><div class="flashcards">${fcHtml}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
 
-  main.innerHTML = `
-    <div class="materia-head">
-      <h2 class="serif">${subject.nome}</h2>
-      <div class="datas">${datasHtml}</div>
-    </div>
-    ${temasHtml}
-  `;
+  main.innerHTML = `<h2>${subject.nome}</h2><p style="color: var(--text-dim); font-size: 0.9rem;">Datas: ${datasHtml}</p>${temasHtml}`;
 }
 
-function toggleTemaOpen(id){
-  const el = document.getElementById('tema-'+id);
+function toggleTemaOpen(id) {
+  const el = document.getElementById('tema-' + id);
   el.classList.toggle('open');
 }
 
-function render(){
+function render() {
   renderTabs();
-  if(currentTab === 'inicio'){
+  if (currentTab === 'inicio') {
     renderInicio();
   } else {
-    const subject = SUBJECTS.find(s=>s.id===currentTab);
-    if(subject) renderMateria(subject);
+    const subject = SUBJECTS.find(s => s.id === currentTab);
+    if (subject) renderMateria(subject);
   }
 }
 
