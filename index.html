@@ -84,7 +84,6 @@
 
   main{padding:24px 20px 0;}
 
-  /* ---------- Início ---------- */
   .countdown-card{
     background:var(--surface);
     border:1px solid var(--border);
@@ -140,7 +139,6 @@
   table.pauta tr.soon td{color:var(--brass);}
   table.pauta td.dim{color:var(--text-dim);}
 
-  /* ---------- Matéria ---------- */
   .materia-head{margin-bottom:18px;}
   .materia-head h2{margin:0 0 4px; font-size:1.5rem;}
   .materia-head .datas{
@@ -273,10 +271,6 @@
     border:1px solid var(--sage);
     transform:rotateY(180deg);
   }
-  .flashcard-face .tag{
-    position:absolute; top:6px; right:8px;
-    font-size:0.65rem; color:var(--text-dim);
-  }
 
   .add-tema-btn{
     display:block;
@@ -292,61 +286,6 @@
     margin-top:6px;
   }
   .add-tema-btn:hover{color:var(--brass); border-color:var(--brass-dim);}
-
-  .modal-overlay{
-    display:none;
-    position:fixed; inset:0;
-    background:rgba(10,12,24,0.7);
-    z-index:20;
-    align-items:flex-end;
-    justify-content:center;
-  }
-  .modal-overlay.open{display:flex;}
-  .modal{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:10px 10px 0 0;
-    width:100%; max-width:520px;
-    max-height:85vh;
-    overflow-y:auto;
-    padding:20px;
-  }
-  .modal h3{margin:0 0 14px;}
-  .modal label{
-    display:block; font-size:0.78rem; color:var(--text-dim); margin:14px 0 6px;
-  }
-  .modal input, .modal textarea{
-    width:100%;
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    border-radius:4px;
-    color:var(--text);
-    padding:10px;
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:0.88rem;
-    resize:vertical;
-  }
-  .fc-row{display:flex; gap:8px; margin-bottom:8px;}
-  .fc-row input{flex:1;}
-  .fc-row button{
-    background:none; border:1px solid var(--border); color:var(--text-dim);
-    border-radius:4px; padding:0 10px; cursor:pointer;
-  }
-  .modal-actions{
-    display:flex; gap:10px; margin-top:18px;
-  }
-  .modal-actions button{
-    flex:1;
-    padding:12px;
-    border-radius:4px;
-    border:none;
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:0.88rem;
-    cursor:pointer;
-  }
-  .btn-cancel{background:var(--surface-2); color:var(--text-dim);}
-  .btn-save{background:var(--brass); color:#1B1204; font-weight:600;}
-  .btn-add-fc{background:none; border:1px dashed var(--border); color:var(--text-dim); width:100%; padding:8px; border-radius:4px; cursor:pointer; font-size:0.8rem;}
 </style>
 </head>
 <body>
@@ -358,217 +297,88 @@
   <main id="main"></main>
 </div>
 
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h3 class="serif">Novo tema</h3>
-    <label>Título do tema</label>
-    <input type="text" id="novoTitulo" placeholder="Ex: Tutela de urgência">
-    <label>Resumo (didático, para revisão rápida)</label>
-    <textarea id="novoResumo" rows="5" placeholder="Explique o tema de forma direta, com os pontos que mais caem em prova..."></textarea>
-    <label>Flashcards</label>
-    <div id="fcList"></div>
-    <button class="btn-add-fc" onclick="addFlashcardRow()">+ Adicionar flashcard</button>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" onclick="salvarTema()">Salvar tema</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ---------- Seed data ----------
 const SUBJECTS = [
   { id:'processo-trabalho', numeral:'I', nome:'Processo do Trabalho',
     dates:{ 'AV1':'16/09/26', 'AV2':'19/10/26', 'AV Final':'25/11/26', '2ª chamada':'11/11/26', 'Especial':'09/12/26' },
     temas: [
       { id:'pt-tgp', titulo:'TGP: Jurisdição, Ação e Processo',
         resumo:`<h4>Jurisdição</h4>
-          <p>É a aplicação da lei a situações concretas, de forma racional e argumentativa. Características: <strong>terceiro imparcial</strong> (não neutro), <strong>órgão de decisão</strong> (não consultivo) e <strong>decisão insuscetível de controle externo</strong> ao Judiciário.</p>
-          <p><strong>Escopos:</strong> social (pacificação/lide sociológica), político (garantia de liberdades), educacional (efeito pedagógico) e jurídico (aplicação da norma ao caso concreto).</p>
-          <p><strong>Jurisdição trabalhista</strong>: função estatal exercida para solucionar conflitos trabalhistas de forma definitiva. Marcas: desigualdade entre as partes e protagonismo judicial.</p>
-          <h4>Ação</h4>
-          <p>Direito de provocar a atividade jurisdicional. Condições da ação (art. 17 e 485, VI do CPC): <strong>interesse</strong> (utilidade/necessidade) e <strong>legitimidade</strong> (pertinência subjetiva).</p>
-          <p><strong>Ação trabalhista</strong>: marcada pelo <em>jus postulandi</em> da parte. Exceções ao jus postulandi: Súmula 425/TST e homologação de acordo extrajudicial (art. 855-B a E CLT).</p>
-          <blockquote><strong>Súmula 425/TST</strong>: o jus postulandi das partes (art. 791/CLT) limita-se às Varas do Trabalho e aos TRTs, não alcançando a ação rescisória, a ação cautelar, o mandado de segurança e os recursos de competência do TST — nessas hipóteses é indispensável advogado.</blockquote>
-          <h4>Processo</h4>
-          <blockquote>Processo é o instrumento previsto em lei para exercer a jurisdição; procedimento é a exteriorização do processo pelos atos praticados.</blockquote>
-          <p><strong>Processo trabalhista</strong>: simplificado e informal, usando o CPC de forma supletiva e subsidiária (art. 769/CLT; art. 15/CPC).</p>`,
+<p>É a aplicação da lei a situações concretas, de forma racional e argumentativa. Características: <strong>terceiro imparcial</strong> (não neutro), <strong>órgão de decisão</strong> (não consultivo) e <strong>decisão insuscetível de controle externo</strong> ao Judiciário.</p>
+<p><strong>Escopos:</strong> social (pacificação/lide sociológica), político (garantia de liberdades), educacional (efeito pedagógico) e jurídico (aplicação da norma ao caso concreto).</p>
+<p><strong>Jurisdição trabalhista</strong>: função estatal exercida para solucionar conflitos trabalhistas de forma definitiva. Marcas: desigualdade entre as partes e protagonismo judicial.</p>
+<h4>Ação</h4>
+<p>Direito de provocar a atividade jurisdicional. Condições da ação (art. 17 e 485, VI do CPC): <strong>interesse</strong> (utilidade/necessidade) e <strong>legitimidade</strong> (pertinência subjetiva).</p>
+<h4>Processo</h4>
+<p>Processo é o instrumento previsto em lei para exercer a jurisdição; procedimento é a exteriorização do processo pelos atos praticados.</p>`,
         flashcards:[
-          {p:'Quais as 3 características da jurisdição?', r:'Terceiro imparcial (não neutro); órgão de decisão (não consultivo); decisão insuscetível de controle externo ao Judiciário.'},
-          {p:'Quais os 4 escopos da jurisdição?', r:'Social, político, educacional e jurídico.'},
-          {p:'Quais as condições da ação e onde estão previstas?', r:'Interesse e legitimidade — art. 17 e 485, VI do CPC.'},
-          {p:'O que é jus postulandi e quais suas exceções?', r:'Capacidade de a própria parte postular sem advogado na Justiça do Trabalho. Exceções: Súmula 425/TST e homologação de acordo extrajudicial (art. 855-B a E da CLT).'},
-          {p:'Diferença entre processo e procedimento?', r:'Processo é o instrumento previsto em lei para o exercício da jurisdição; procedimento é a exteriorização do processo pelos atos processuais praticados.'}
-        ]},
-      { id:'pt-conceito-fontes', titulo:'Conceito, Autonomia e Fontes do DPT',
-        resumo:`<h4>Conceito</h4>
-          <p>Disciplina que estuda a jurisdição trabalhista, usando supletiva e subsidiariamente o processo civil, à luz dos princípios constitucionais, para concretizar as normas de Direito do Trabalho.</p>
-          <h4>Autonomia frente ao Direito Processual Civil</h4>
-          <ul>
-            <li><strong>Monista</strong>: mero desdobramento do DPC, sem institutos próprios.</li>
-            <li><strong>Dualista</strong>: autonomia plena — legislação, princípios e justiça especializada próprios.</li>
-            <li><strong>Intermediária</strong>: autonomia relativa, com recurso subsidiário ao CPC (art. 769/CLT).</li>
-            <li><strong>Posição moderna</strong> (arts. 15 e 1046, §2º do CPC): o DPT é um <em>subsistema</em> da Teoria Geral do Processo, compartilhando princípios e institutos comuns.</li>
-          </ul>
-          <h4>Fontes formais diretas</h4>
-          <p><strong>CF</strong> (direitos fundamentais art. 5º, direitos trabalhistas art. 7º, organização da JT arts. 92 e 111-117) → <strong>CLT</strong> (cláusula de barreira art. 769) → <strong>CPC</strong> (arts. 15 e 1046, §2º; normas fundamentais arts. 1º a 12) → legislação extravagante e subsidiária → tratados/convenções da OIT → regimentos internos e resoluções → costumes (ex.: mandato tácito, art. 791, §3º/CLT).</p>
-          <h4>Fontes formais indiretas</h4>
-          <p>Doutrina; jurisprudência (Súmulas e OJs do TST — não vinculantes); Súmulas Vinculantes; precedentes; teses vinculantes do TST.</p>
-          <h4>Fontes de explicitação</h4>
-          <p>Analogia, princípios gerais de direito e equidade (art. 8º da CLT; art. 4º da LINDB; art. 766/CLT; art. 140 do CPC — vedação ao <em>non liquet</em>).</p>`,
-        flashcards:[
-          {p:'Quais as 3 correntes tradicionais sobre a autonomia do DPT?', r:'Monista (sem autonomia), Dualista (autonomia plena) e Intermediária (autonomia relativa, recurso subsidiário ao CPC).'},
-          {p:'Qual a posição moderna sobre a autonomia do DPT?', r:'O DPT é um subsistema da Teoria Geral do Processo — arts. 15 e 1046, §2º do CPC.'},
-          {p:'O que é a "cláusula de barreira/abertura" e onde está prevista?', r:'Art. 769 da CLT — permite o uso subsidiário do CPC quando há lacuna e compatibilidade com os princípios do processo do trabalho.'},
-          {p:'Cite 2 exemplos de costume como fonte do DPT.', r:'Mandato tácito (art. 791, §3º/CLT) e o protesto (art. 795, caput, CLT).'},
-          {p:'As Súmulas do TST são fontes diretas ou indiretas?', r:'Indiretas — não são obrigatórias, refletem a prática dos Tribunais.'}
+          {p:'Quais as 3 características da jurisdição?', r:'Terceiro imparcial; órgão de decisão; decisão insuscetível de controle externo.'},
+          {p:'Quais os 4 escopos da jurisdição?', r:'Social, político, educacional e jurídico.'}
         ]},
     ] },
   { id:'direito-familia', numeral:'II', nome:'Direito de Família',
     dates:{ 'AV1':'17/09/26', 'AV2':'29/10/26', 'AV Final':'26/11/26', '2ª chamada':'12/11/26', 'Especial':'10/12/26' },
     temas: [
-      { id:'df-conceito-familia', titulo:'Conceito de Família e de Direito de Família',
+      { id:'df-conceito-familia', titulo:'Conceito de Família',
         resumo:`<h4>Direito de Família</h4>
-          <p>Conjunto de normas jurídicas que regulam as múltiplas relações familiares. Integra o Direito Civil, logo o Direito Privado.</p>
-          <h4>O que é família?</h4>
-          <ul>
-            <li><strong>CR/88, art. 226</strong>: a família é a base da sociedade.</li>
-            <li><strong>Declaração Universal dos Direitos Humanos (ONU, 1948), art. 16</strong>: núcleo natural e fundamental da sociedade.</li>
-            <li>É <strong>fato natural e social</strong> — anterior ao Direito e ao próprio Estado; muda de forma e conteúdo conforme o local e o tempo (daí a dificuldade de um conceito atemporal).</li>
-            <li>Torna-se <strong>fato jurídico</strong> ao gerar consequências jurídicas — o Direito se preocupa com a família por ela ser considerada base da sociedade.</li>
-          </ul>
-          <h4>A "moldura" jurídica da família até 1988</h4>
-          <p>Desde a independência do Brasil (1822) até a CR/88, as Constituições reconheciam apenas o <strong>casamento</strong> como forma de família — excluindo uniões informais.</p>
-          <blockquote><strong>CR/1967, art. 167</strong>: "A família é constituída pelo casamento e terá direito à proteção dos Poderes Públicos." <strong>CC/1916, art. 229</strong>: "Criando a família legítima, o casamento legitima os filhos comuns, antes dele nascidos ou concebidos."</blockquote>
-          <p>O CC/1916 regulava a família em função de um projeto específico: a <strong>família proprietária de bens (burguesa)</strong>, na qual o marido era chefe, em posição superior à mulher e aos filhos.</p>
-          <h4>A revolução da CR/88</h4>
-          <p>Colocou a pessoa (dignidade da pessoa humana, art. 1º, III) no centro do ordenamento, provocando:</p>
-          <ul>
-            <li><strong>a) Família plural</strong> (art. 226, §§3º e 4º): casamento deixa de ser sinônimo de família e passa a ser apenas uma espécie de entidade familiar — união estável e família monoparental são expressamente reconhecidas.</li>
-            <li><strong>b) Igualdade entre homens e mulheres</strong> (art. 226, §5º).</li>
-            <li><strong>c) Igualdade entre os filhos</strong> (art. 227, §6º).</li>
-            <li><strong>d) Liberdade</strong> (art. 226, §§6º e 7º): aumento da autonomia privada e diminuição da interferência do Estado na família, manifestada em várias frentes:
-              <ul>
-                <li>Liberdade para escolher a modalidade de família (STF, RE 878.694/MG — que, em conjunto com o RE 646721, equiparou os regimes sucessórios de cônjuge e companheiro, tanto em uniões hetero quanto homoafetivas).</li>
-                <li>Liberdade para escolher com quem formar família (STF, ADI 4277 e ADPF 132, 2011 — união homoafetiva).</li>
-                <li>Liberdade para dissolver a entidade familiar sem observar prazo ou pré-requisitos (EC 66/2010).</li>
-                <li>Liberdade para escolher o próprio regime de bens, inclusive para maiores de 70 anos (STF, ARE 1.309.642, Tema 1.236, julgado em 2024): o regime de separação obrigatória de bens do art. 1.641, II/CC pode ser afastado por manifestação expressa de vontade das partes, mediante escritura pública (no casamento, exige-se autorização judicial).</li>
-              </ul>
-            </li>
-          </ul>
-          <p><strong>Vale lembrar</strong>: o Direito tem por principal função harmonizar as relações sociais.</p>
-          <p>A família deixa de ser vista por sua função econômica e passa a valorizar os <strong>laços afetivos</strong> — o respeito aos sentimentos supera a proteção ao patrimônio.</p>`,
+<p>Conjunto de normas jurídicas que regulam as múltiplas relações familiares. Integra o Direito Civil.</p>
+<h4>O que é família?</h4>
+<ul>
+<li><strong>CR/88, art. 226</strong>: a família é a base da sociedade.</li>
+<li>É <strong>fato natural e social</strong> anterior ao Direito.</li>
+<li>Torna-se <strong>fato jurídico</strong> ao gerar consequências jurídicas.</li>
+</ul>`,
         flashcards:[
-          {p:'O que diz o art. 226 da CR/88 sobre a família?', r:'Que a família é a base da sociedade.'},
-          {p:'Antes da CR/88, qual era a única forma de família reconhecida no Brasil?', r:'O casamento (CR/1967, art. 167; CC/1916, art. 229).'},
-          {p:'Quais as 4 principais mudanças trazidas pela CR/88 no Direito de Família?', r:'Família plural (art. 226, §§3º e 4º), igualdade entre homens e mulheres (art. 226, §5º), igualdade entre os filhos (art. 227, §6º) e liberdade (art. 226, §§6º e 7º).'},
-          {p:'Qual o principal elemento da concepção contemporânea de família?', r:'A afetividade (personalização da família).'}
+          {p:'O que diz o art. 226 da CR/88?', r:'A família é a base da sociedade.'},
+          {p:'Qual o principal elemento da família contemporânea?', r:'A afetividade.'}
         ]},
     ] },
   { id:'processo-penal', numeral:'III', nome:'Processo Penal',
     dates:{ 'AV1':'22/09/26', 'AV2':'26/10/26', 'AV Final':'23/11/26', '2ª chamada':'09/11/26', 'Especial':'07/12/26' },
     temas: [
       { id:'pp-fontes', titulo:'Fontes do Direito Processual Penal',
-        resumo:`<p>Fonte é o local de onde provém algo — tudo que pertence ao Direito Processual Penal (DPP) constitui suas fontes.</p>
-          <h4>Fontes formais x fontes substanciais</h4>
-          <p><strong>Formais</strong>: é a própria lei, a lei escrita/materializada.</p>
-          <p><strong>Substanciais</strong>: a vontade por trás da norma (todo norma tem um "desejo") — é abstrata, não comportando classificação em subtipos.</p>
-          <h4>Fontes formais diretas</h4>
-          <p>São as que já constituem lei pronta e acabada:</p>
-          <ul>
-            <li><strong>Principais</strong>: Código de Processo Penal e Constituição Federal.</li>
-            <li><strong>Extravagantes</strong>: como o CPP não consegue reger todas as matérias processuais penais, surgem leis que giram em torno dele — subdivididas em <em>complementares</em> (completam o CPP) e <em>modificativas</em> (alteram o CPP: nova redação, novo parágrafo, supressão de inciso, nova interpretação).</li>
-            <li><strong>Orgânicas principais</strong>: leis de organização judiciária (leis estaduais — cada unidade federativa organiza seu próprio Poder Judiciário).</li>
-            <li><strong>Orgânicas complementares</strong>: regimentos internos dos tribunais (cada tribunal tem o seu).</li>
-          </ul>
-          <h4>Fontes formais supletivas</h4>
-          <p>Ainda não são lei acabada, mas podem gerar uma lei:</p>
-          <ul>
-            <li><strong>Indiretas</strong> (maior proximidade com a produção da lei): costumes, jurisprudência, princípios.</li>
-            <li><strong>Secundárias</strong> (menor proximidade): doutrina, direito histórico, direito estrangeiro.</li>
-          </ul>`,
+        resumo:`<h4>Fontes formais diretas</h4>
+<ul>
+<li><strong>Principais</strong>: Código de Processo Penal e Constituição Federal.</li>
+<li><strong>Extravagantes</strong>: leis complementares e modificativas do CPP.</li>
+</ul>`,
         flashcards:[
-          {p:'Qual a diferença entre fonte formal e fonte substancial no DPP?', r:'Formal é a própria lei (escrita/materializada); substancial é a vontade/desejo por trás da norma, de natureza abstrata.'},
-          {p:'Quais são as fontes formais diretas principais do DPP?', r:'Código de Processo Penal e Constituição Federal.'},
+          {p:'Quais são as fontes formais diretas principais do DPP?', r:'Código de Processo Penal e Constituição Federal.'}
         ]},
     ] },
   { id:'direito-tributario', numeral:'IV', nome:'Direito Tributário',
-    dates:{ 'AV1':'24/09/26', 'AV2':'27/12/26', 'AV Final':'24/11/26', '2ª chamada':'10/11/26', 'Especial':'10/12/26' },
+    dates:{ 'AV1':'24/09/26', 'AV2':'27/12/26', 'AV Final':'24/11/26' },
     temas: [
-      { id:'dt-competencia-fontes', titulo:'Competência Tributária e Fontes do Direito Tributário',
-        resumo:`<h4>Repartição constitucional da competência tributária</h4>
-          <p>A CF distribui uma parcela do poder de tributar entre União, Estados, DF e Municípios.</p>`,
+      { id:'dt-competencia', titulo:'Competência Tributária',
+        resumo:`<h4>Repartição de competências</h4>
+<p>A Constituição Federal distribui o poder de tributar entre União, Estados, DF e Municípios.</p>`,
         flashcards:[
-          {p:'Qual a competência dos Municípios em matéria tributária?', r:'Competência suplementar (art. 30/CF).'},
+          {p:'Quem estabelece a competência tributária?', r:'A Constituição Federal.'}
         ]},
     ] },
   { id:'direito-administrativo', numeral:'V', nome:'Direito Administrativo',
     dates:{ 'AV1':'25/09/26', 'AV2':'30/10/26', 'AV Final':'27/11/26' },
     temas: [
-      { id:'da-agentes-publicos', titulo:'Agentes Públicos: Conceito e Espécies',
+      { id:'da-agentes', titulo:'Agentes Públicos',
         resumo:`<h4>Conceito</h4>
-          <p>Agentes públicos é o gênero: todo aquele que exerce atividade em nome da Administração Pública.</p>
-          <h4>Espécies</h4>
-          <ul>
-            <li>Agentes políticos</li>
-            <li>Servidores públicos</li>
-            <li>Militares</li>
-            <li>Particulares em colaboração com a administração</li>
-          </ul>`,
+<p>Agentes públicos: todo aquele que exerce atividade em nome da Administração Pública.</p>
+<h4>Espécies</h4>
+<ul>
+<li>Agentes políticos</li>
+<li>Servidores públicos</li>
+<li>Militares</li>
+</ul>`,
         flashcards:[
-          {p:'O que caracteriza um agente político?', r:'Vínculo político-eleitoral criado por processo eleitoral.'},
+          {p:'O que é um agente público?', r:'Todo aquele que exerce atividade em nome da Administração Pública.'}
         ]},
     ] },
 ];
 
 let currentTab = 'inicio';
-let storageCache = {};
 
 function parseData(str){
   const [d,m,y] = str.split('/').map(Number);
   return new Date(2000+y, m-1, d);
-}
-
-async function getStorage(key, fallback){
-  try{
-    const r = await window.storage.get(key, false);
-    return r ? JSON.parse(r.value) : fallback;
-  }catch(e){ return fallback; }
-}
-async function setStorage(key, value){
-  try{ await window.storage.set(key, JSON.stringify(value), false); }catch(e){}
-}
-
-async function getRevisado(temaId){
-  if(storageCache['rev:'+temaId] !== undefined) return storageCache['rev:'+temaId];
-  const v = await getStorage('rev:'+temaId, false);
-  storageCache['rev:'+temaId] = v;
-  return v;
-}
-async function toggleRevisado(temaId){
-  const cur = await getRevisado(temaId);
-  storageCache['rev:'+temaId] = !cur;
-  await setStorage('rev:'+temaId, !cur);
-  render();
-}
-
-async function getExtraTemas(subjectId){
-  const key = 'extra-temas:'+subjectId;
-  if(storageCache[key] !== undefined) return storageCache[key];
-  const v = await getStorage(key, []);
-  storageCache[key] = v;
-  return v;
-}
-async function addExtraTema(subjectId, tema){
-  const key = 'extra-temas:'+subjectId;
-  const list = await getExtraTemas(subjectId);
-  list.push(tema);
-  storageCache[key] = list;
-  await setStorage(key, list);
-}
-
-function allTemas(subject, extra){
-  return [...subject.temas, ...extra];
 }
 
 function nextExam(){
@@ -599,7 +409,7 @@ function goTo(id){
   render();
 }
 
-async function renderInicio(){
+function renderInicio(){
   const main = document.getElementById('main');
   const next = nextExam();
   const now = new Date();
@@ -610,7 +420,7 @@ async function renderInicio(){
       <div class="countdown-card">
         <div class="eyebrow">Próxima prova</div>
         <div class="big">${days} dia${days===1?'':'s'}</div>
-        <div class="sub">${next.tipo} de ${next.subject} — ${next.date.toLocaleDateString('pt-BR')}</div>
+        <div class="sub">${next.tipo} de ${next.subject}</div>
       </div>`;
   }
 
@@ -641,14 +451,9 @@ async function renderInicio(){
   `;
 }
 
-async function renderMateria(subject){
+function renderMateria(subject){
   const main = document.getElementById('main');
-  const extra = await getExtraTemas(subject.id);
-  const temas = allTemas(subject, extra);
-
-  let revisadoCount = 0;
-  for(const t of temas){ if(await getRevisado(t.id)) revisadoCount++; }
-  const pct = temas.length ? Math.round(100*revisadoCount/temas.length) : 0;
+  const temas = subject.temas;
 
   const datasHtml = Object.entries(subject.dates).map(([tipo,str])=>
     `<span>${tipo}: <b>${str}</b></span>`
@@ -656,10 +461,9 @@ async function renderMateria(subject){
 
   let temasHtml = '';
   if(temas.length === 0){
-    temasHtml = `<div class="empty">Nenhum tema cadastrado ainda nesta matéria.<br>Envie seus materiais (anotações, roteiros, slides ou gravações de aula) para o Claude no chat, ou adicione um tema manualmente abaixo.</div>`;
+    temasHtml = `<div class="empty">Nenhum tema cadastrado.</div>`;
   } else {
     for(const t of temas){
-      const rev = await getRevisado(t.id);
       const fcHtml = (t.flashcards||[]).map((fc,i)=>`
         <div class="flashcard" onclick="this.classList.toggle('flipped')">
           <div class="flashcard-inner">
@@ -673,7 +477,6 @@ async function renderMateria(subject){
           <div class="tema-head" onclick="toggleTemaOpen('${t.id}')">
             <span class="chev">▸</span>
             <span class="titulo">${t.titulo}</span>
-            <span class="revisado-pill ${rev?'on':''}" onclick="event.stopPropagation(); toggleRevisado('${t.id}')">${rev?'revisado':'a revisar'}</span>
           </div>
           <div class="tema-body">
             <div class="resumo">${t.resumo}</div>
@@ -687,13 +490,8 @@ async function renderMateria(subject){
     <div class="materia-head">
       <h2 class="serif">${subject.nome}</h2>
       <div class="datas">${datasHtml}</div>
-      ${temas.length ? `
-        <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
-        <div class="progress-label">${revisadoCount} de ${temas.length} temas revisados (${pct}%)</div>
-      ` : ''}
     </div>
     ${temasHtml}
-    <button class="add-tema-btn" onclick="openModal('${subject.id}')">+ Adicionar tema manualmente</button>
   `;
 }
 
@@ -702,57 +500,14 @@ function toggleTemaOpen(id){
   el.classList.toggle('open');
 }
 
-async function render(){
+function render(){
   renderTabs();
   if(currentTab === 'inicio'){
-    await renderInicio();
+    renderInicio();
   } else {
     const subject = SUBJECTS.find(s=>s.id===currentTab);
-    await renderMateria(subject);
+    if(subject) renderMateria(subject);
   }
-}
-
-let modalSubjectId = null;
-function openModal(subjectId){
-  modalSubjectId = subjectId;
-  document.getElementById('novoTitulo').value = '';
-  document.getElementById('novoResumo').value = '';
-  document.getElementById('fcList').innerHTML = '';
-  addFlashcardRow();
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-function addFlashcardRow(){
-  const wrap = document.createElement('div');
-  wrap.className = 'fc-row';
-  wrap.innerHTML = `
-    <input type="text" placeholder="Pergunta" class="fc-p">
-    <input type="text" placeholder="Resposta" class="fc-r">
-    <button onclick="this.parentElement.remove()">×</button>
-  `;
-  document.getElementById('fcList').appendChild(wrap);
-}
-async function salvarTema(){
-  const titulo = document.getElementById('novoTitulo').value.trim();
-  const resumo = document.getElementById('novoResumo').value.trim();
-  if(!titulo){ return; }
-  const flashcards = [];
-  document.querySelectorAll('#fcList .fc-row').forEach(row=>{
-    const p = row.querySelector('.fc-p').value.trim();
-    const r = row.querySelector('.fc-r').value.trim();
-    if(p && r) flashcards.push({p,r});
-  });
-  const tema = {
-    id: modalSubjectId+'-'+Date.now(),
-    titulo,
-    resumo: '<p>'+resumo.replace(/\n/g,'</p><p>')+'</p>',
-    flashcards
-  };
-  await addExtraTema(modalSubjectId, tema);
-  closeModal();
-  render();
 }
 
 render();
